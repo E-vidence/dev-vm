@@ -19,3 +19,5 @@ git clone https://github.com/E-vidence/dev-vm.git
 cd dev-vm
 vagrant up
 ```
+
+> Tested on Mac OS X.

@@ -7,14 +7,14 @@
 # you're doing.
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "centos/7"
+  config.vm.box = "vStone/centos-7.x-puppet.3.x"
 
-  config.vm.box_check_update = false
+  config.vm.box_check_update = true
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 5432, host: 5432
 
   # Create a private network, which allows host-only access to the machine
@@ -35,5 +35,13 @@ Vagrant.configure(2) do |config|
     vb.memory = "768"
   end
 
-  config.vm.provision "shell", path: "bootstrap.sh"
+  # config.vm.provision "shell", path: "bootstrap.sh", run: "once"
+  config.vm.provision "puppet" do |puppet|
+    puppet.manifests_path = "puppet/manifest"
+    puppet.manifest_file = "evidence.pp"
+    puppet.module_path = "puppet/modules"
+    # puppet.options = "--verbose"
+    puppet.options = "--verbose --debug"
+  end
+
 end
