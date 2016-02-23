@@ -3,6 +3,20 @@ node default {
   # include os_essentials
   include pgsql_install
   include pgsql_config
+  include pgsql_start
+  include config_apache
+}
+
+
+class pgsql_start {
+
+  require pgsql_config
+
+  service { 
+    'postgresql-9.5':
+      enable    => true,
+      ensure    => true,
+  }
 }
 
 class pgsql_config {
@@ -13,11 +27,24 @@ class pgsql_config {
     path    => '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
   }
 
-  service { 
-    'postgresql-9.5':
-      enable    => true,
-      ensure    => true,
-      require => Exec['initdb']
+  file {
+    "/var/lib/pgsql/9.5/data/pg_hba.conf":
+        mode => "0600",
+        owner => 'postgres',
+        group => 'postgres',
+        source => 'puppet:///modules/config/pg_hba.conf',
+        require => Exec['initdb']
+  }
+
+  ### ajustar caminho...
+
+  file {
+    "/var/lib/pgsql/9.5/data/postgresql.conf":
+        mode => "0600",
+        owner => 'postgres',
+        group => 'postgres',
+        source => 'puppet:///modules/config/postgresql.conf',
+        require => Exec['initdb']
   }
 }
 
@@ -30,6 +57,26 @@ class pgsql_install {
   package { 
     $install:
       ensure  => present,
+  }
+}
+
+class config_apache {
+  require os_essentials
+
+  service { 
+    httpd:
+      enable    => true,
+      ensure    => false,
+      hasstatus => true,
+      require => file["/etc/httpd/conf.d/e-vidence_api.conf"]
+  }  
+
+  file {
+    "/etc/httpd/conf.d/e-vidence_api.conf":
+        mode => "0644",
+        owner => 'root',
+        group => 'root',
+        source => 'puppet:///modules/config/e-vidence_api.conf'
   }
 }
 
@@ -52,7 +99,7 @@ class os_essentials {
   }
 
 
-  $install = ['vim-enhanced','wget','bzip2', 'epel-release', 'deltarpm' ]
+  $install = ['vim-enhanced','wget','bzip2', 'epel-release', 'deltarpm', 'httpd', 'php', 'php-pgsql' ]
 
   package { 
     $install:
@@ -74,6 +121,21 @@ class os_essentials {
       provider => 'rpm'
   }
 
+  ## SELinux stuff
+  exec 
+  {
+    "disable-selinux": 
+      command => "/usr/sbin/setenforce 0",
+  }
+
+  file {
+    "/etc/selinux/config":
+        mode => "0644",
+        owner => 'root',
+        group => 'root',
+        source => 'puppet:///modules/config/selinux_config'
+  }
+
 }
 
 
@@ -93,6 +155,13 @@ class yum::update
   {
     "yum-update":
       command => "/usr/bin/yum -q -y update",
+      timeout => 1800
+  }
+
+  exec
+  {
+    "remove-pgsql":
+      command => "/usr/bin/rm -rf /var/lib/pgsql/9.5/data/*",
       timeout => 1800
   }
 }

@@ -24,6 +24,12 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "../api", "/evidence_api"
   config.vm.synced_folder "../etl", "/evidence_etl"
 
+  # config.vm.synced_folder "template_fi`les", "/etc/puppet/files"
+  # config.vm.share_folder  "template_files", "/tmp/vagrant-puppet/templates"
+  # config.vm.share_folder("modules", "/etc/puppet/modules", "modules")
+
+
+
   config.vm.hostname = "evidence-dev-box"
 
 
@@ -40,8 +46,8 @@ Vagrant.configure(2) do |config|
     puppet.manifests_path = "puppet/manifest"
     puppet.manifest_file = "evidence.pp"
     puppet.module_path = "puppet/modules"
-    # puppet.options = "--verbose"
-    puppet.options = "--verbose --debug"
+
+    puppet.options = ["--verbose", "--debug"]
   end
 
 end
