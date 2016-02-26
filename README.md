@@ -16,6 +16,7 @@ cd e-vidence
 git clone https://github.com/E-vidence/api.git
 git clone https://github.com/E-vidence/etl.git
 git clone https://github.com/E-vidence/dev-vm.git
+git clone https://github.com/E-vidence/web-cli.git
 cd dev-vm
 vagrant up
 ```
