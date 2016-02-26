@@ -23,6 +23,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder "../api", "/evidence_api"
   config.vm.synced_folder "../etl", "/evidence_etl"
+  config.vm.synced_folder "../web-cli", "/evidence_webcli"
 
   # config.vm.synced_folder "template_fi`les", "/etc/puppet/files"
   # config.vm.share_folder  "template_files", "/tmp/vagrant-puppet/templates"

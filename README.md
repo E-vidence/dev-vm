@@ -1,7 +1,7 @@
 # dev-vm
 VM de desenvolvimento do E-vidence
 
-## Usage
+## Instalation
 
 Install:
 
@@ -21,4 +21,20 @@ cd dev-vm
 vagrant up
 ```
 
-> Tested on Mac OS X.
+> **IMPORTANT:** DO NOT USE `vagrant provision` unless you WANT lose your database data. 
+
+Ajust the `/etc/hosts` file:
+
+```
+192.168.100.100 api.e-vidence.local api
+192.168.100.100 web.e-vidence.local web
+```
+
+> On mac, it's located on `/private/etc/hosts`, on Linux on `/etc/hosts` and on Windows on `c:/Windows/System32/Drivers/etc/hosts`.
+
+## Usage
+
+* [http://api.e-vidence.local](http://api.e-vidence.local)
+* [http://web.e-vidence.local](http://web.e-vidence.local)
+
+Tested on Mac OS X and Ubuntu 14.04 LTS.

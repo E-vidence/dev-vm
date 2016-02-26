@@ -68,7 +68,7 @@ class config_apache {
       enable    => true,
       ensure    => false,
       hasstatus => true,
-      require => file["/etc/httpd/conf.d/e-vidence_api.conf"]
+      require => File["/etc/httpd/conf.d/e-vidence_api.conf", "/etc/httpd/conf.d/e-vidence_web.conf"]
   }  
 
   file {
@@ -77,6 +77,14 @@ class config_apache {
         owner => 'root',
         group => 'root',
         source => 'puppet:///modules/config/e-vidence_api.conf'
+  }  
+
+  file {
+    "/etc/httpd/conf.d/e-vidence_web.conf":
+        mode => "0644",
+        owner => 'root',
+        group => 'root',
+        source => 'puppet:///modules/config/e-vidence_web.conf'
   }
 }
 
@@ -126,6 +134,8 @@ class os_essentials {
   {
     "disable-selinux": 
       command => "/usr/sbin/setenforce 0",
+      unless => "getenforce",
+      path    => '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
   }
 
   file {
