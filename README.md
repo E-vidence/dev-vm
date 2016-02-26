@@ -19,6 +19,8 @@ git clone https://github.com/E-vidence/dev-vm.git
 git clone https://github.com/E-vidence/web-cli.git
 cd dev-vm
 vagrant up
+vagrant plugin install vagrant-vbguest
+vagrant reload
 ```
 
 > **IMPORTANT:** DO NOT USE `vagrant provision` unless you WANT lose your database data. 
